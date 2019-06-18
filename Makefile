@@ -2,7 +2,7 @@
 dist ?= ../../dist
 
 # 仓库名
-repo ?= gitbook-overview
+repo ?= gitbook-collection
 
 # 部署
 .PHONY: deploy
