@@ -19,7 +19,7 @@ node_modules: book.json
 	gitbook install
 
 # 编译gitbook
-.PHONY: pull
+.PHONY: build
 build:
 	gitbook build ./ $(dist)/$(repo)
 
