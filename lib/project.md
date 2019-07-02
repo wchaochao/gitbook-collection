@@ -11,5 +11,6 @@ package.json // npm包描述文件
 .eslintrc.js // eslint配置文件
 .eslintignore // eslint忽略文件
 .babelrc // babel配置文件
+.npmrc // npm配置文件
 Makefile // make构建文件
 ```
