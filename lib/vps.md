@@ -65,7 +65,7 @@ cat id_rsa.pub
 ## 禁用Root登录
 
 ```bash
-# 编辑ssd_config
+# 编辑/etc/ssh/sshd_config
 # PasswordAuthentication yes 改为 PasswordAuthentication no
 # PermitRootLogin yes 改为 PermitRootLogin no
 sudo vi /etc/ssh/sshd_config
@@ -115,6 +115,13 @@ sudo yum -y install epel-release
 sudo yum -y install wget
 ```
 
+## 安装vim
+
+```bash
+# 安装wget
+sudo yum -y install vim
+```
+
 ## 搭建ShadowSocks
 
 ```bash
@@ -158,15 +165,29 @@ git config --global user.email <email>
 git config --list
 ```
 
-## 安装node
+## 安装nvm
 
 ```bash
-# 安装node
-sudo yum -y install nodejs
+# 下载命令并执行
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
 
-# 验证
-node -v
-npm -v
+# 加入系统环境
+source ~/.bashrc
+
+# 查看可用的node版本
+nvm ls-remote
+
+# 下载node版本
+nvm install <version>
+
+# 查看已下载的node版本
+nvm list
+
+# 使用已下载某个node版本
+nvm use <version>
+
+# 将已下载的某个node版本设为默认值
+nvm alias default <version>
 ```
 
 ## 安装pm2
@@ -217,3 +238,5 @@ sudo vi /etc/nginx/conf.d/<name>.conf
 # 查看nginx服务
 ps aux|grep nginx
 ```
+
+## 安装mongodb
