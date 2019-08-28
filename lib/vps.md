@@ -1,4 +1,4 @@
-# VPS配置
+# vps配置
 
 标签（空格分隔）： 收藏
 
@@ -7,8 +7,8 @@
 ## Root登录
 
 ```bash
-# port为VPS的ssh端口号，默认为22
-# ip为VPS的IP
+# port为vps的ssh端口号，默认为22
+# ip为vps的IP
 ssh -p <port> root@<ip>
 ```
 
@@ -240,3 +240,130 @@ ps aux|grep nginx
 ```
 
 ## 安装mongodb
+
+### 安装
+
+下载源码
+
+```bash
+# 下载
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel62-3.2.7.tgz
+
+# 解压
+tar -xvf mongodb-linux-x86_64-rhel62-3.2.7.tgz
+
+# 重命名
+mv mongodb-linux-x86_64-rhel62-3.2.7 mongodb
+```
+
+配置环境变量
+
+```bash
+# 配置
+sudo vim /etc/profile.d/mongo.sh
+
+# mongo.sh内容为
+export MONGODB_HOME=/usr/local/mongodb
+export PATH=$MONGODB_HOME/bin:$PATH
+
+# 启用
+sourch /etc/profile
+```
+
+验证
+
+```bash
+mongod -v
+```
+
+### 启动
+
+创建数据库文件夹
+
+```bash
+# 使用root账户登录，防止mongodb启动时报权限错误
+su -
+mkdir -p /data/mongodb
+touch /data/mongodb/log/mongodb.log
+```
+
+命令行参数启动
+
+```bash
+mongodb --dbpath <dbpath> --logpath <logpath> --fork
+```
+
+配置文件启动
+
+```bash
+# 创建配置文件
+vim /etc/mongodb.conf
+
+# mongodb.conf内容为
+dbpath=/data/mongodb
+logpath=/data/mongodb/log/mongodb.log
+logappend=true
+port=27017
+fork=true
+# auth = true # 先关闭, 创建好用户再启动
+
+# 通过配置文件启动
+mongod -f ~/data/mongodb/mongodb.conf
+```
+
+### 权限管理
+
+创建root用户
+
+```bash
+# 连接mongodb
+mongo
+
+# 切换到admin库
+use admin
+
+# 创建root账号
+db.createUser({user: "<user>", pwd: "<pwd>", roles: ["root"]})
+
+# 认证root账号
+db.auth("<user>", "<pwd>") # 1代表成功，0代码失败
+```
+
+启用auth
+
+```
+# mongodb.conf中添加auth验证
+auth=true
+```
+
+重启mongodb服务
+
+```
+# 通过mongo关闭mongodb
+use admin
+db.shutdownServer()
+
+# 通过pid关闭mongodb
+ps aux|grep mongo
+kill -2 <pid>
+
+# 启动mongodb
+mongod -f /etc/mongodb.conf
+```
+
+验证
+
+```bash
+mongo
+show dbs # 报无权限错误
+
+use admin
+db.auth("<user>", "<pwd>")
+show dbs # 可以显示
+```
+
+mongoose连接
+
+```javascript
+mongooes.connect("mongodb://user:password@localhost:27017/database", {useNewUrlParser: true})
+```
